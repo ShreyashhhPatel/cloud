@@ -47,41 +47,36 @@ Clouds/
 
 ### Prerequisites
 
-- Node.js (v14 or higher)
-- npm or yarn
+- [Bun](https://bun.sh/) (recommended)  
+  or
+- Node.js (v14 or higher) and npm/yarn
 
-### Installation
-
-1. Install dependencies:
+### Installation (with Bun)
 
 ```bash
-npm install
+bun install
 ```
 
-### Development
+### Development (with Bun)
 
 Run the development server with hot module replacement:
 
 ```bash
-npm run dev
+bun run dev
 ```
 
 The site will be available at `http://localhost:3000`
 
-### Build for Production
-
-Build optimized production assets:
+### Build for Production (with Bun)
 
 ```bash
-npm run build
+bun run build
 ```
 
-### Preview Production Build
-
-Preview the production build locally:
+### Preview Production Build (with Bun)
 
 ```bash
-npm run preview
+bun run preview
 ```
 
 ## 🎨 Animations

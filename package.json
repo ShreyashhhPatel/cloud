@@ -2,6 +2,7 @@
   "name": "minimalgoods",
   "version": "1.0.0",
   "type": "module",
+  "packageManager": "bun@1.1.34",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
