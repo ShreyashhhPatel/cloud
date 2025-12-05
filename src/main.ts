@@ -37,12 +37,6 @@ function loadImages(): void {
     showcaseImage2.src = getImageAtIndex(20)
   }
 
-  // Set slider circle image (row 2, 5th image = index 11)
-  const sliderCircleImage = document.getElementById('slider-circle-image') as HTMLImageElement
-  if (sliderCircleImage) {
-    sliderCircleImage.src = getImageAtIndex(11) // row 2 start (7) + 5th image (index 4) = 11
-  }
-
   // Create gallery grid
   const galleryGrid = document.getElementById('gallery-grid')
   if (galleryGrid) {
@@ -192,114 +186,36 @@ function initAnimations(): void {
 }
 
 function setupSliderAnimation(): void {
-  const sliderSection = document.querySelector('.slider-section-wrapper') as HTMLElement | null
   const rows = gsap.utils.toArray<HTMLElement>('.slider-row')
-  const overlay = document.getElementById('slider-circle-overlay') as HTMLElement | null
-  const overlayText = document.querySelector('.slider-circle-text') as HTMLElement | null
+  if (rows.length === 0) return
 
-  if (!sliderSection || rows.length === 0 || !overlay) return
+  const loops: gsap.core.Timeline[] = []
 
-  // Find the source image for the sticky circle: slider row 2, 5th image
-  let triggerImage: HTMLElement | null = null
-  const row2 = document.getElementById('slider-row-2') as HTMLElement | null
-  if (row2) {
-    const row2Items = row2.querySelectorAll<HTMLElement>('.slider-item')
-    // 5th image (index 4) if available, otherwise last one
-    if (row2Items.length >= 5) {
-      triggerImage = row2Items[4]
-    } else if (row2Items.length > 0) {
-      triggerImage = row2Items[row2Items.length - 1]
-    }
-  }
-
-  // Master timeline pinned to the slider section.
-  // Phase 1: rows slide horizontally as you scroll.
-  // Phase 2: one image grows into a full-screen circle with "nature's canvas" overlay.
-  const master = gsap.timeline({
-    scrollTrigger: {
-      trigger: sliderSection,
-      start: 'top top',
-      end: '+=2500',  // controls how long the section stays pinned
-      scrub: true,
-      pin: true
-    }
-  })
-
-  // PHASE 1: move each row horizontally. Alternate directions for a nice effect.
+  // Create an infinite horizontal loop for each row, alternating direction
   rows.forEach((row, index) => {
-    const distance = row.scrollWidth - row.clientWidth
-    if (distance <= 0) return
+    const items = Array.from(row.querySelectorAll<HTMLElement>('.slider-item'))
+    if (items.length === 0) return
 
-    const direction = index % 2 === 0 ? -1 : 1 // even rows left, odd rows right
+    const loop = horizontalLoop(items, {
+      repeat: -1,
+      paused: true,
+      speed: index % 2 === 0 ? 1 : -1, // even rows left, odd rows right
+      snap: 0.1
+    })
 
-    master.to(row, {
-      x: direction * distance,
-      ease: 'none'
-    }, 0) // all rows move during the first half of the timeline
+    loops.push(loop)
   })
 
-  // PHASE 2: sticky circle effect from one of the slider images.
-  const fallbackSize = 350
-
-  master.addLabel('circleStart')
-
-  // Compute starting geometry so the circle appears to emerge from the trigger image.
-  const startState: gsap.TweenVars = {}
-  const endState: gsap.TweenVars = {
-    opacity: 1,
-    width: '100vw',
-    height: '100vh',
-    borderRadius: '0px',
-    x: 0,
-    y: 0,
-    ease: 'power2.inOut',
-    duration: 1
-  }
-
-  if (triggerImage) {
-    const rect = triggerImage.getBoundingClientRect()
-    const viewportCenterX = window.innerWidth / 2
-    const viewportCenterY = window.innerHeight / 2
-
-    const startWidth = rect.width
-    const startHeight = rect.height
-    const startRadius = Math.min(startWidth, startHeight) / 2
-
-    const offsetX = rect.left + rect.width / 2 - viewportCenterX
-    const offsetY = rect.top + rect.height / 2 - viewportCenterY
-
-    Object.assign(startState, {
-      opacity: 0,
-      width: startWidth,
-      height: startHeight,
-      borderRadius: `${startRadius}px`,
-      x: offsetX,
-      y: offsetY
-    })
-  } else {
-    Object.assign(startState, {
-      opacity: 0,
-      width: fallbackSize,
-      height: fallbackSize,
-      borderRadius: `${fallbackSize / 2}px`,
-      x: 0,
-      y: 0
-    })
-  }
-
-  master.fromTo(overlay, startState, endState, 'circleStart')
-
-  if (overlayText) {
-    master.fromTo(overlayText, {
-      opacity: 0,
-      y: 20
-    }, {
-      opacity: 1,
-      y: 0,
-      duration: 0.6,
-      ease: 'power2.out'
-    }, 'circleStart+=0.6')
-  }
+  // Start/stop the loops when the slider section enters/leaves the viewport
+  ScrollTrigger.create({
+    trigger: '.slider-section-wrapper',
+    start: 'top 80%',
+    end: 'bottom top',
+    onEnter: () => loops.forEach(loop => loop.play()),
+    onLeave: () => loops.forEach(loop => loop.pause()),
+    onEnterBack: () => loops.forEach(loop => loop.play()),
+    onLeaveBack: () => loops.forEach(loop => loop.pause())
+  })
 }
 
 /*
