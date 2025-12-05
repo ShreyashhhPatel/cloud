@@ -1,0 +1,122 @@
+/* Slider Section Wrapper - extended height for scroll effect */
+.slider-section-wrapper {
+    height: 250vh; /* Extended height for scroll-driven animation */
+    display: block;
+    position: relative;
+    background: #1a1a1a;
+    overflow: visible;
+}
+
+.slider-content {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2vh;
+    padding: 5vh 0;
+    z-index: 1;
+}
+
+.slider-row {
+    height: 22vh;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.slider-item {
+    height: 100%;
+    /* Show exactly 7 photos per row */
+    flex: 0 0 calc(100% / 7);
+    margin: 0;
+    padding: 0;
+    position: relative;
+    flex-shrink: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: grab;
+}
+
+.slider-item:active {
+    cursor: grabbing;
+}
+
+.slider-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.slider-item:hover img {
+    transform: scale(1.1);
+}
+
+/* Slider Circle Overlay - emerges from row 4 image 3 */
+.slider-circle-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 22vh;
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0;
+    will-change: width, height, border-radius, opacity;
+}
+
+.slider-circle-overlay.active {
+    opacity: 1;
+}
+
+.slider-circle-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.slider-circle-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2em;
+    color: #ffffff;
+    text-align: center;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.slider-circle-text-italic {
+    font-size: clamp(2rem, 3vw, 3rem);
+    font-style: italic;
+    font-weight: 400;
+}
+
+.slider-circle-text-main {
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 700;
+    line-height: 1;
+}
+
+@media (max-width: 768px) {
+    .slider-item {
+        width: 50vw;
+    }
+    .slider-circle-overlay {
+        width: 50vw;
+    }
+}
+

@@ -1,0 +1,42 @@
+/* Sticky Circle Animation */
+.sticky-circle_wrap {
+    position: relative;
+    height: 200vh; /* Ensure enough scroll space for the animation */
+    display: block;
+    width: 100%;
+    /* background-color: inherit; Match section background */ 
+}
+
+.sticky-circle {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.sticky-circle_element {
+    width: 30vw; /* Use viewport units for responsive sizing */
+    height: 30vw;
+    border-radius: 50%; /* Start as circle */
+    overflow: hidden;
+    position: relative;
+    z-index: 2;
+}
+
+.sticky-circle_img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+@media (max-width: 768px) {
+    .sticky-circle_element {
+        width: 60vw;
+        height: 60vw;
+    }
+}
