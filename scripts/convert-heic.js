@@ -19,7 +19,7 @@ const path = require('path');
 console.log('HEIC to JPG Conversion Script');
 console.log('==============================\n');
 
-console.log('⚠️  This script requires additional dependencies:');
+console.log(' This script requires additional dependencies:');
 console.log('   npm install heic-convert sharp\n');
 
 console.log('📋 Instructions:');
@@ -32,7 +32,7 @@ const outputDir = path.join(__dirname, '..', 'img-converted');
 
 // Check if img directory exists
 if (!fs.existsSync(imgDir)) {
-  console.error('❌ Error: img/ directory not found');
+  console.error(' Error: img/ directory not found');
   process.exit(1);
 }
 
